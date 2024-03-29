@@ -10,8 +10,6 @@ export function TableMatrix(){
     const TABLE_SIZE = NUM_COLS*40
     const INIT_POS = [0,7]
     const END_POS = [15,16]
-    const d4x = [0, 1, 0, -1]
-    const d4y = [-1, 0, 1, 0]
 
     function createNode(row,col){
         return { 
