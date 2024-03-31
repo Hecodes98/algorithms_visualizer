@@ -13,6 +13,8 @@ export function TableMatrix() {
     const INIT_POS = [0, 7]
     const END_POS = [15, 16]
 
+    //TODO: Implement the visualization of the path
+
     function createNode(row, col) {
         return {
             row,
