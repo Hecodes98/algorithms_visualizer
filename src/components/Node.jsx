@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export function Node({row, col, isWall, handleMouseDown, handleMouseUp, handleMouseEnter, isInit, isEnd}){
+export function Node({row, col, isWall, handleMouseDown, handleMouseUp, handleMouseEnter, isInit, isEnd, isPath}){
     
     const wallColorClass = isWall
     ?  'bg-slate-500'
@@ -8,6 +8,8 @@ export function Node({row, col, isWall, handleMouseDown, handleMouseUp, handleMo
     ? 'bg-red-600'
     : isEnd
     ? 'bg-green-600'
+    : isPath
+    ? 'bg-teal-500 animate-pulse'
     : ''
 
     return(

@@ -6,6 +6,7 @@ export function TableMatrix() {
 
     const [matrix, setMatrix] = useState([])
     const [mouseIsPressed, setMousePress] = useState(false);
+    const [shortestPath, setShortestPath] = useState([])
     const NUM_ROWS = 20;
     const NUM_COLS = 20;
     const TABLE_SIZE = NUM_COLS * 40
@@ -25,32 +26,41 @@ export function TableMatrix() {
         }
     }
 
-    function getNewGridWithToggledWall(row, col) {
+
+    function getNewGridWithUpdatedNode({row, col}, updates) {
         const tempGrid = [...matrix]
         const node = tempGrid[row][col]
         const newNode = {
             ...node,
-            isWall: !node.isWall,
-        }
+            ...updates,
+        };
         tempGrid[row][col] = newNode
         return tempGrid
+    }
+
+    function getNewGridWithShortestPath({row,col}) {
+        return getNewGridWithUpdatedNode({row, col}, {isPath: true})
+    }
+
+    function getNewGridWithToggledWall({row, col}) {
+        return getNewGridWithUpdatedNode({row, col}, {isWall: !matrix[row][col].isWall})
     }
 
     function findShortestPath() {
         const startNode = matrix[INIT_POS[0]][INIT_POS[1]]
         const endNode = matrix[END_POS[0]][END_POS[1]]
-        const path = dijkstra(matrix, startNode, endNode)
-        console.log(path)
+        const {path, visitedNodesInOrder} = dijkstra(matrix, startNode, endNode)
+        setShortestPath(path.reverse())
     }
 
-    function handleClick(row, col) {
-        const tempGrid = getNewGridWithToggledWall(row, col)
+    function handleClick(node) {
+        const tempGrid = getNewGridWithToggledWall(node)
         setMatrix(tempGrid)
     }
 
-    function onMouseEnter(row, col) {
+    function onMouseEnter(node) {
         if (!mouseIsPressed) return
-        handleClick(row, col)
+        handleClick(node)
     }
 
     function initGrid() {
@@ -69,10 +79,27 @@ export function TableMatrix() {
         initGrid()
     }, []);
 
-    console.log(matrix)
+    useEffect(() => {
+        if(shortestPath.length > 0){
+            const timer = setInterval(() => {
+                const tempShortestPath = [...shortestPath]
+                const node = tempShortestPath.pop()
+                const tempGrid = getNewGridWithShortestPath(node)
+                setMatrix(tempGrid)
+                setShortestPath(tempShortestPath)
+                if(tempShortestPath.length === 0){
+                    clearInterval(timer)
+                    setShortestPath([])
+                }
+            }, 50);
+            return () => clearInterval(timer)
+        }
+    }, [shortestPath]);
+
+    console.log(shortestPath)
 
     return (
-        <div className={`${TABLE_CLASS} my-0 mx-auto`}>
+        <div className={`w-[800px] my-0 mx-auto`}>
             {
                 matrix.map((row, rowIdx) => (
                     <div className='grid grid-cols-20' key={rowIdx}>
@@ -83,15 +110,16 @@ export function TableMatrix() {
                                 row={node.row}
                                 isWall={node.isWall}
                                 handleMouseDown={() => {
-                                    handleClick(node.row, node.col)
+                                    handleClick(node)
                                     setMousePress(true)
                                 }}
                                 handleMouseUp={() => {
                                     setMousePress(false)
                                 }}
-                                handleMouseEnter={() => onMouseEnter(node.row, node.col)}
+                                handleMouseEnter={() => onMouseEnter(node)}
                                 isInit={INIT_POS[0] === node.row && INIT_POS[1] === node.col}
                                 isEnd={END_POS[0] === node.row && END_POS[1] === node.col}
+                                isPath={node.isPath}
                             />
                         ))}
                     </div>
