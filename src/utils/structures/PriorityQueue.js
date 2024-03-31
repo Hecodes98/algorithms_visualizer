@@ -37,7 +37,7 @@ class PriorityQueue{
     bubbleDown(){
         let index = 0
         let length = this.heap.length
-        const node = peek()
+        const node = this.peek()
         while(true){
             let leftChild, rightChild = null
             let leftChildIndex = index * 2 + 1
