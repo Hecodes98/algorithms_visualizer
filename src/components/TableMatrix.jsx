@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { dijkstra } from '../utils/algorithms/dijkstra';
+import { dfs } from '../utils/algorithms/dfs';
 import { Node } from "./Node"
 import { ButtonTableMatrix } from './ButtonTableMatrix';
 
@@ -59,7 +60,7 @@ export function TableMatrix() {
         setIsSearching(true)
         const startNode = matrix[INIT_POS[0]][INIT_POS[1]]
         const endNode = matrix[END_POS[0]][END_POS[1]]
-        const {path, visitedNodesInOrder} = dijkstra(matrix, startNode, endNode)
+        const {path, visitedNodesInOrder} = dfs(matrix, startNode, endNode)
         setVisitedInOrder(visitedNodesInOrder)
         setShortestPath(path)
     }

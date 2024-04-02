@@ -57,5 +57,5 @@ export function dijkstra(grid, start_node, end_node){
             }
         }
     }   
-    return null
+    return {path: [], visitedNodesInOrder: visited}
 }
