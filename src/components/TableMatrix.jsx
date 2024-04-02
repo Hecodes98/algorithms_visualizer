@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { dijkstra } from '../utils/algorithms/dijkstra';
 import { Node } from "./Node"
+import { ButtonTableMatrix } from './ButtonTableMatrix';
+
+const INIT_POS = [0, 7]
+const END_POS = [15, 16]
+const NUM_ROWS = 20;
+const NUM_COLS = 20;
 
 export function TableMatrix() {
-
     const [matrix, setMatrix] = useState([])
-    const [mouseIsPressed, setMousePress] = useState(false);
+    const [mouseIsPressed, setMousePress] = useState(false)
     const [shortestPath, setShortestPath] = useState([])
-    const NUM_ROWS = 20;
-    const NUM_COLS = 20;
+    const [visitedInOrder, setVisitedInOrder] = useState([])
+    const [isSearching, setIsSearching] = useState(false)
     const TABLE_SIZE = NUM_COLS * 40
     const TABLE_CLASS = `w-[${TABLE_SIZE}px]`
-    const INIT_POS = [0, 7]
-    const END_POS = [15, 16]
-
+    const DISABLED_BUTTON = isSearching 
+    ? 'disabled:opacity-0 cursor-not-allowed pointer-events-none'
+    : ''
     //TODO: Implement the visualization of the path
 
     function createNode(row, col) {
@@ -46,11 +51,17 @@ export function TableMatrix() {
         return getNewGridWithUpdatedNode({row, col}, {isWall: !matrix[row][col].isWall})
     }
 
+    function getNewGridWithVisitedInOrder({row, col}) {
+        return getNewGridWithUpdatedNode({row, col}, {isVisited: true})
+    }
+
     function findShortestPath() {
+        setIsSearching(true)
         const startNode = matrix[INIT_POS[0]][INIT_POS[1]]
         const endNode = matrix[END_POS[0]][END_POS[1]]
         const {path, visitedNodesInOrder} = dijkstra(matrix, startNode, endNode)
-        setShortestPath(path.reverse())
+        setVisitedInOrder(visitedNodesInOrder)
+        setShortestPath(path)
     }
 
     function handleClick(node) {
@@ -75,29 +86,43 @@ export function TableMatrix() {
         setMatrix(tempMatrix)
     }
 
+    
+    function updateGrid(path, setPath, updateFunctionArgs, timer){
+        const [node, ...tempPath] = [...path]
+        const tempGrid = getNewGridWithUpdatedNode(node, updateFunctionArgs)
+        setMatrix(tempGrid)
+        setPath(tempPath)
+        if(tempPath.length === 0){
+            clearInterval(timer)
+            setPath([])
+        }
+    }
+
+    function clearGrid() {
+        initGrid()
+        setIsSearching(false)
+        setShortestPath([])
+        setVisitedInOrder([])
+    }
+    
+    useEffect(() => {
+        if (shortestPath.length > 0 && visitedInOrder.length < 1) {
+            const timer = setInterval(() => {
+                updateGrid(shortestPath, setShortestPath, {isPath:true}, 50);
+            }, 50);
+            return () => clearInterval(timer);
+        }
+        if (visitedInOrder.length > 0) {
+            const timer = setInterval(() => {
+                updateGrid(visitedInOrder, setVisitedInOrder, {isVisited:true}, 50);
+            }, 0);
+            return () => clearInterval(timer);
+        }
+    }, [shortestPath, visitedInOrder]);
+    
     useEffect(() => {
         initGrid()
     }, []);
-
-    useEffect(() => {
-        if(shortestPath.length > 0){
-            const timer = setInterval(() => {
-                const tempShortestPath = [...shortestPath]
-                const node = tempShortestPath.pop()
-                const tempGrid = getNewGridWithShortestPath(node)
-                setMatrix(tempGrid)
-                setShortestPath(tempShortestPath)
-                if(tempShortestPath.length === 0){
-                    clearInterval(timer)
-                    setShortestPath([])
-                }
-            }, 50);
-            return () => clearInterval(timer)
-        }
-    }, [shortestPath]);
-
-    console.log(shortestPath)
-
     return (
         <div className={`w-[800px] my-0 mx-auto`}>
             {
@@ -106,9 +131,7 @@ export function TableMatrix() {
                         {row.map((node, colIdx) => (
                             <Node
                                 key={colIdx}
-                                col={node.col}
-                                row={node.row}
-                                isWall={node.isWall}
+                                node={node}
                                 handleMouseDown={() => {
                                     handleClick(node)
                                     setMousePress(true)
@@ -119,19 +142,17 @@ export function TableMatrix() {
                                 handleMouseEnter={() => onMouseEnter(node)}
                                 isInit={INIT_POS[0] === node.row && INIT_POS[1] === node.col}
                                 isEnd={END_POS[0] === node.row && END_POS[1] === node.col}
-                                isPath={node.isPath}
                             />
                         ))}
                     </div>
                 ))
             }
             <div className='m-2 flex place-content-center'>
-                <button 
-                    onClick={() => {findShortestPath()}}
-                    type="button" 
-                    className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                    Sort
-                </button>
+                <ButtonTableMatrix 
+                    isSorting={isSearching} 
+                    findShortestPath={findShortestPath}
+                    clearGrid={clearGrid} 
+                />
             </div>
         </div>
     )
