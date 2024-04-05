@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 
 import { Element } from './Element'
+import { Slider } from './Slider'
 
 import { bubbleSort } from '../../utils/algorithms/sorting/bubbleSort'
 import { selectionSort } from '../../utils/algorithms/sorting/selectionSort'
@@ -10,9 +11,11 @@ export const ArrayVisualizer = () => {
     const [array, setArray] = useState([])
     const [animations, setAnimations] = useState([])
     const [prevPicked, setPrevPicked] = useState(null)
+    const [arraySize, setArraySize] = useState(30)
+    const [isSorting, setIsSorting] = useState(false)
 
     const generateRandomArray = () => {
-        const randomArray = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100 + 1))
+        const randomArray = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100 + 1))
         setArray(randomArray)
     }
 
@@ -20,6 +23,7 @@ export const ArrayVisualizer = () => {
         let tempArray = [...array]
         //tempArray = selectionSort(tempArray)
         //console.log(tempArray)
+        setIsSorting(true)
         const animations = bubbleSort(tempArray)
         setAnimations(animations)
     }
@@ -41,6 +45,7 @@ export const ArrayVisualizer = () => {
             setPrevPicked([i,j]) 
             if(animationsCopy.length === 0){ 
                 setPrevPicked(null)
+                setIsSorting(false)
                 clearInterval(timer)
             }
         }, 70) 
@@ -48,9 +53,21 @@ export const ArrayVisualizer = () => {
     }, 
     [animations])
 
+    useEffect(() => {
+        generateRandomArray()
+    }, [arraySize]);
+
     return(
         <div className={`w-[1020px] h-[600px] mt-4 mx-auto flex flex-col justify-center items-center 
                         ${array.length === 0 ? 'bg-slate-300/50':''}`}>
+            {!isSorting &&
+
+                <Slider
+                    arraySize={arraySize}
+                    setArraySize={setArraySize}
+                />
+            
+            }
             <div className={`h-full flex justify-center items-end ${array.length > 0 ?'block':'hidden'}`}>
             {
                 array.map((value, idx) => (
