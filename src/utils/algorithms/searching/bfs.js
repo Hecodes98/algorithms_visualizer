@@ -1,4 +1,4 @@
-import { Queue } from "../structures/Queue";
+import { Queue } from "../../structures/Queue.js";
 import { getNeighbors } from './getNeighbors.js';
 
 export function bfs(grid, start_node, end_node){

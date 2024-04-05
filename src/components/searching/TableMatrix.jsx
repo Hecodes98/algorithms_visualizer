@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { dijkstra } from '../utils/algorithms/dijkstra';
-import { dfs } from '../utils/algorithms/dfs';
-import { bfs } from '../utils/algorithms/bfs';
+import { dijkstra } from '../../utils/algorithms/searching/dijkstra';
+import { dfs } from '../../utils/algorithms/searching/dfs';
+import { bfs } from '../../utils/algorithms/searching/bfs';
 import { Node } from "./Node"
 import { ButtonTableMatrix } from './ButtonTableMatrix';
 import { SelectAlgorithm } from './SelectAlgorithm';

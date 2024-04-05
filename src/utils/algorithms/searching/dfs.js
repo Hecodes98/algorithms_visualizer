@@ -1,4 +1,4 @@
-import { Stack } from '../structures/Stack'
+import { Stack } from '../../structures/Stack'
 import { getNeighbors } from './getNeighbors'
 
 /*** 

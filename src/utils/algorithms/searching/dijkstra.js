@@ -1,4 +1,4 @@
-import PriorityQueue from '../structures/PriorityQueue.js';
+import PriorityQueue from '../../structures/PriorityQueue.js';
 import { getNeighbors } from './getNeighbors.js';
 
 function getPath(grid, end_node) {
