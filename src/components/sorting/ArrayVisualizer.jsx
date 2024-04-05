@@ -16,15 +16,15 @@ export const ArrayVisualizer = () => {
         setArray(randomArray)
     }
 
-    const sortArray = () => {
+    const sortArray = () => { //TODO: Implement selection sort visualization
         let tempArray = [...array]
-        tempArray = selectionSort(tempArray)
-        console.log(tempArray)
-        //const animations = bubbleSort(tempArray)
-        //setAnimations(animations)
+        //tempArray = selectionSort(tempArray)
+        //console.log(tempArray)
+        const animations = bubbleSort(tempArray)
+        setAnimations(animations)
     }
 
-    useEffect(() => {
+    useEffect(() => { //TODO: Check the actual approach for visualization and scale it for this can work for any sorting algorithm
         if(animations.length === 0) return
         const timer = setInterval(() => {
             const [move, ...animationsCopy] = animations
@@ -43,7 +43,7 @@ export const ArrayVisualizer = () => {
                 setPrevPicked(null)
                 clearInterval(timer)
             }
-        }, 20) 
+        }, 70) 
         return () => clearInterval(timer)
     }, 
     [animations])
