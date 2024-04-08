@@ -4,17 +4,21 @@ import { dfs } from '../../utils/algorithms/searching/dfs';
 import { bfs } from '../../utils/algorithms/searching/bfs';
 import { Node } from "./Node"
 import { ButtonTableMatrix } from './ButtonTableMatrix';
-import { SelectAlgorithm } from './SelectAlgorithm';
+import { SelectAlgorithm } from '../SelectAlgorithm';
 
+const OPTIONS = [
+    'dijkstra', 
+    'dfs', 
+    'bfs'
+]
 const INIT_POS = [0, 7]
 const END_POS = [15, 16]
 const NUM_ROWS = 20;
 const NUM_COLS = 20;
 
 export function TableMatrix() {
-
+    
     const [selectedAlgorithm, setSelectedAlgorithm] = useState(undefined)
-
     const [matrix, setMatrix] = useState([])
     const [mouseIsPressed, setMousePress] = useState(false)
     const [shortestPath, setShortestPath] = useState([])
@@ -61,10 +65,10 @@ export function TableMatrix() {
     }
 
     function executeFunctionOnGrid() {
-        setIsSearching(true)
         const startNode = matrix[INIT_POS[0]][INIT_POS[1]]
         const endNode = matrix[END_POS[0]][END_POS[1]]
         const { path, visitedNodesInOrder } = findShortestPath(matrix, startNode, endNode)
+        setIsSearching(true)
         setVisitedInOrder(visitedNodesInOrder)
         setShortestPath(path)
     }
@@ -79,7 +83,6 @@ export function TableMatrix() {
                 return bfs(matrix, startNode, endNode);
             case undefined:
                 alert('Selecciona un algoritmo de búsqueda')
-                setIsSearching(false)
                 break;
             default:
                 break;
@@ -149,6 +152,7 @@ export function TableMatrix() {
             <SelectAlgorithm
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}
+                options={OPTIONS}
             />
             {
                 matrix.map((row, rowIdx) => (

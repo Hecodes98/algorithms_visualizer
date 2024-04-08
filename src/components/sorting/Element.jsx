@@ -1,7 +1,4 @@
 export function Element({value, width, isPicked}){
-
-    console.log(value, width, isPicked)
-
     const elementStyle = {
         minHeight: '30px',
         height: `${(value*4)}px`,
