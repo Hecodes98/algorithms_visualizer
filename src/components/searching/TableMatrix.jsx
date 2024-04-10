@@ -148,7 +148,7 @@ export function TableMatrix() {
         initGrid()
     }, []);
     return (
-        <div className={`w-[800px] my-0 mx-auto`}>
+        <div className={`w-[640px] my-0 mx-auto`}>
             <SelectAlgorithm
                 selectedAlgorithm={selectedAlgorithm}
                 setSelectedAlgorithm={setSelectedAlgorithm}

@@ -23,7 +23,7 @@ export function Node({node, handleMouseDown, handleMouseUp, handleMouseEnter, is
     return(
         <div 
             id={`id-${row}-${col}`} 
-            className={`size-10 border-2 ${wallColorClass}`}
+            className={`size-8 border-2 ${wallColorClass}`}
             onMouseDown={() => handleMouseDown(row,col)} 
             onMouseUp={() => handleMouseUp()}
             onMouseEnter={() => handleMouseEnter(row,col)}

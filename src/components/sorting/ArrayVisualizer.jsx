@@ -29,9 +29,9 @@ export const ArrayVisualizer = () => {
         let tempArray = [...array]
         //tempArray = selectionSort(tempArray)
         //console.log(tempArray)
-        setIsSorting(true)
         const animationsSteps = sortAlgorithm(tempArray)
-        console.log(animationsSteps)
+        if(animationsSteps === undefined) return
+        setIsSorting(true)
         setAnimations(animationsSteps)
     }
 
@@ -113,7 +113,7 @@ export const ArrayVisualizer = () => {
                     className="mx-1 text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
                         Generate random array
                 </button>
-                {array.length > 0 && (
+                {(!isSorting && array.length > 0) && (
                     <button
                         type="button" 
                         onClick={sortArray}
