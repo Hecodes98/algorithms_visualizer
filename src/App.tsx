@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { NavBar } from './components/navbar/NavBar'
 import { HomePage } from './pages/HomePage'
 function App() {
-//TODO: Create pages for the routes
   return (
     <Router>
       <NavBar/>

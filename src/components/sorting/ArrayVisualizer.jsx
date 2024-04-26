@@ -6,11 +6,14 @@ import { Slider } from './Slider'
 
 import { bubbleSort } from '../../utils/algorithms/sorting/bubbleSort'
 import { selectionSort } from '../../utils/algorithms/sorting/selectionSort'
+import { quickSort } from '../../utils/algorithms/sorting/quickSort'
 
 import { SelectAlgorithm } from '../SelectAlgorithm';
 
 
-const OPTIONS = ['bubbleSort', 'selectionSort']
+const OPTIONS = ['bubbleSort', 'selectionSort', 'quickSort']
+
+
 
 export const ArrayVisualizer = () => {
     const [array, setArray] = useState([])
@@ -25,10 +28,8 @@ export const ArrayVisualizer = () => {
         setArray(randomArray)
     }
 
-    const sortArray = () => { //TODO: Implement selection sort visualization
+    const sortArray = () => { 
         let tempArray = [...array]
-        //tempArray = selectionSort(tempArray)
-        //console.log(tempArray)
         const animationsSteps = sortAlgorithm(tempArray)
         if(animationsSteps === undefined) return
         setIsSorting(true)
@@ -41,6 +42,8 @@ export const ArrayVisualizer = () => {
                 return bubbleSort(array)
             case 'selectionSort':
                 return selectionSort(array)
+            case 'quickSort':
+                return quickSort(array)
             case undefined:
                 alert('Selecciona un algoritmo de ordenamiento')
                 break;
@@ -49,7 +52,7 @@ export const ArrayVisualizer = () => {
         }
     }
 
-    useEffect(() => { //TODO: Check the actual approach for visualization and scale it for this can work for any sorting algorithm
+    useEffect(() => { 
         if(animations === undefined || animations.length === 0 ) return
         const timer = setInterval(() => {
             const [move, ...animationsCopy] = animations
