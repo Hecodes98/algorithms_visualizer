@@ -6,9 +6,18 @@ import { Slider } from './Slider'
 
 import { bubbleSort } from '../../utils/algorithms/sorting/bubbleSort'
 import { selectionSort } from '../../utils/algorithms/sorting/selectionSort'
+import { quickSort } from '../../utils/algorithms/sorting/quickSort'
+
+import { SelectAlgorithm } from '../SelectAlgorithm';
+
+
+const OPTIONS = ['bubbleSort', 'selectionSort', 'quickSort']
+
+
 
 export const ArrayVisualizer = () => {
     const [array, setArray] = useState([])
+    const [selectedAlgorithm, setSelectedAlgorithm] = useState(undefined)
     const [animations, setAnimations] = useState([])
     const [prevPicked, setPrevPicked] = useState(null)
     const [arraySize, setArraySize] = useState(30)
@@ -19,17 +28,32 @@ export const ArrayVisualizer = () => {
         setArray(randomArray)
     }
 
-    const sortArray = () => { //TODO: Implement selection sort visualization
+    const sortArray = () => { 
         let tempArray = [...array]
-        //tempArray = selectionSort(tempArray)
-        //console.log(tempArray)
+        const animationsSteps = sortAlgorithm(tempArray)
+        if(animationsSteps === undefined) return
         setIsSorting(true)
-        const animations = bubbleSort(tempArray)
-        setAnimations(animations)
+        setAnimations(animationsSteps)
     }
 
-    useEffect(() => { //TODO: Check the actual approach for visualization and scale it for this can work for any sorting algorithm
-        if(animations.length === 0) return
+    function sortAlgorithm(array) {
+        switch (selectedAlgorithm) {
+            case 'bubbleSort':
+                return bubbleSort(array)
+            case 'selectionSort':
+                return selectionSort(array)
+            case 'quickSort':
+                return quickSort(array)
+            case undefined:
+                alert('Selecciona un algoritmo de ordenamiento')
+                break;
+            default:
+                break;
+        }
+    }
+
+    useEffect(() => { 
+        if(animations === undefined || animations.length === 0 ) return
         const timer = setInterval(() => {
             const [move, ...animationsCopy] = animations
             const [i, j, value1, value2] = move
@@ -48,18 +72,23 @@ export const ArrayVisualizer = () => {
                 setIsSorting(false)
                 clearInterval(timer)
             }
-        }, 70) 
+        }, 200) 
         return () => clearInterval(timer)
     }, 
     [animations])
 
     useEffect(() => {
+        if(array.length === 0) return
         generateRandomArray()
     }, [arraySize]);
 
     return(
         <div className={`w-[1020px] h-[600px] mt-4 mx-auto flex flex-col justify-center items-center 
                         ${array.length === 0 ? 'bg-slate-300/50':''}`}>
+            <SelectAlgorithm 
+                selectedAlgorithm={selectedAlgorithm} 
+                setSelectedAlgorithm={setSelectedAlgorithm} 
+                options={OPTIONS}/>
             {!isSorting &&
 
                 <Slider
@@ -87,7 +116,7 @@ export const ArrayVisualizer = () => {
                     className="mx-1 text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
                         Generate random array
                 </button>
-                {array.length > 0 && (
+                {(!isSorting && array.length > 0) && (
                     <button
                         type="button" 
                         onClick={sortArray}

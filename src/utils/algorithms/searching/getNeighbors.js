@@ -1,6 +1,6 @@
 export function getNeighbors(grid, row, col){
-    const d4x = [0, 1, 0, -1]
-    const d4y = [-1, 0, 1, 0]
+    const d4x = [-1, 0, 1, 0]
+    const d4y = [0, 1, 0, -1]
     const numRows = grid.length
     const numCols = grid[0].length
     const neighbors = []

@@ -6,14 +6,16 @@ export function selectionSort(array){
         currentIdx = idx + 1
         while(currentIdx < array.length){
             if(array[currentIdx] < array[minorIdx]){
+                animations.push([currentIdx, minorIdx, array[minorIdx], array[currentIdx]])
                 minorIdx = currentIdx
             }
             currentIdx++
         }
+        animations.push([idx, minorIdx, array[idx], array[minorIdx]])
         swap(array, idx, minorIdx)
         idx++
     }
-    return array
+    return animations
 }
 
 function swap(array, left, right){
